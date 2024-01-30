@@ -1,35 +1,54 @@
 class ArticlesController < ApplicationController
-  # root GET /
+  before_action :set_article, only: [:show, :edit, :update, :destroy]
+
   def index
-    @articles = Article.all
+    @query = params[:query]
+    @page = params[:page].to_i.positive? ? params[:page].to_i : 1
+    @per_page = 5
+    @total_count = Article.search_by_query(@query).count
+    @articles = Article.search(@query, @page, @per_page)
   end
 
-  # article GET /articles/:id
   def show
-    @article = Article.find(params[:id])
   end
 
-  # new_article GET /articles/new
   def new
     @article = Article.new
   end
 
-  # POST /articles
+  def edit
+  end
+
   def create
-    @article = Article.new(title: "...", body: "...")
+    @article = Article.new(article_params)
 
     if @article.save
-      # if success, redirect to /article/:id
       redirect_to @article
     else
-      # render new article again & status code 422  
       render :new, status: :unprocessable_entity
     end
   end
 
-  private
-    def article_params
-      params.require(:article).permit(:title, :content, :author, :date)
+  def update
+    if @article.update(article_params)
+      redirect_to @article
+    else
+      render :edit, status: :unprocessable_entity
     end
+  end
 
+  def destroy
+    @article.destroy
+    redirect_to root_path, status: :see_other
+  end
+
+  private
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :content, :author, :date)
+  end
 end

@@ -5,3 +5,14 @@
     <p>Written by <%= @article.author %></p>
     <p>On <%= @article.date.strftime("%Y-%m-%d") %></p>
 </div>
+
+<ul>
+  <li><%= link_to "Edit article", edit_article_path %></li>
+  <li>
+    <%= link_to "Destroy", article_path(@article), data: {
+    turbo_method: :delete,
+    turbo_confirm: "Are you sure you want to delete this article?"
+    } %>
+  </li>
+  <li><%= link_to "Back to articles", articles_path %></li>
+</ul>
