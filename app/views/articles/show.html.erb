@@ -1,0 +1,7 @@
+<h1> Article: <%= @article.title %></h1>
+
+<div>
+    <p><%= @article.content %></p>
+    <p>Written by <%= @article.author %></p>
+    <p>On <%= @article.date.strftime("%Y-%m-%d") %></p>
+</div>
